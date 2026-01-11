@@ -87,7 +87,7 @@ class SeanceController extends Controller
 
         $seance = Seance::findOrFail($id);
 
-        // проверка уникальности (hall_id, start_at) с исключением текущей записи
+        // проверка уникальности hall_id, start_at с исключением текущей записи
         $exists = Seance::where('hall_id', $validated['hall_id'])
             ->where('start_at', $validated['start_at'])
             ->where('id', '!=', $seance->id)
