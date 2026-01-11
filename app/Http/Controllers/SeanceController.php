@@ -19,7 +19,7 @@ class SeanceController extends Controller
         ]);
     }
 
-    // показать 1 сеанс (как у тебя уже есть)
+    // показать 1 сеанс
     public function show(string $id)
     {
         return view('seance', [
@@ -49,7 +49,7 @@ class SeanceController extends Controller
         ]);
 
 
-        // бизнес-ограничение из твоих миграций:
+        // бизнес-ограничение из миграций:
         // (hall_id, start_at) должно быть уникально
         $exists = Seance::where('hall_id', $validated['hall_id'])
             ->where('start_at', $validated['start_at'])
