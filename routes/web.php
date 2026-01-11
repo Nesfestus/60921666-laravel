@@ -18,8 +18,20 @@ Route::get('/halls/{id}', [HallController::class, 'show']);
 Route::get('/movies', [MovieController::class, 'index']);
 Route::get('/movies/{id}', [MovieController::class, 'show']);
 
+
+
 use App\Http\Controllers\SeanceController;
 use App\Http\Controllers\SeatController;
+
+// CRUD seances
+Route::get('/seances', [SeanceController::class, 'index']);
+Route::get('/seances/create', [SeanceController::class, 'create']);
+Route::post('/seances', [SeanceController::class, 'store']);
+
+Route::get('/seances/edit/{id}', [SeanceController::class, 'edit']);
+Route::post('/seances/update/{id}', [SeanceController::class, 'update']);
+
+Route::get('/seances/destroy/{id}', [SeanceController::class, 'destroy']);
 
 Route::get('/seances/{id}', [SeanceController::class, 'show']);
 Route::get('/seats/{id}', [SeatController::class, 'show']);

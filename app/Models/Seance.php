@@ -21,6 +21,7 @@ class Seance extends Model
         return $this->hasMany(Price::class);
     }
 
+
 // М↔М: проданные места (через tickets)
     public function seats()
     {
@@ -28,5 +29,8 @@ class Seance extends Model
             ->withPivot(['full_name'])
             ->withTimestamps();
     }
+
+    protected $fillable = ['hall_id', 'movie_id', 'start_at'];
+
 
 }
