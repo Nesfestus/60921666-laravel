@@ -10,14 +10,23 @@ use Illuminate\Http\Request;
 class SeanceController extends Controller
 {
     // список всех сеансов
-    public function index()
+    public function index(Request $request)
     {
+        $perpage = (int) $request->get('perpage', 5);
+
+        // чтобы не ставили 999999
+        if ($perpage < 1) $perpage = 5;
+        if ($perpage > 50) $perpage = 50;
+
         return view('seances', [
+            'perpage' => $perpage,
             'seances' => Seance::with(['hall', 'movie'])
                 ->orderBy('start_at')
-                ->get()
+                ->paginate($perpage)
+                ->withQueryString()
         ]);
     }
+
 
     // показать 1 сеанс
     public function show(string $id)

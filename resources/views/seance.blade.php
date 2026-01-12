@@ -24,3 +24,5 @@
 @endif
 </body>
 </html>
+
+{{ $seances->links() }}
