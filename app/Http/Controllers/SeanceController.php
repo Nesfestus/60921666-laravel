@@ -6,6 +6,7 @@ use App\Models\Hall;
 use App\Models\Movie;
 use App\Models\Seance;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class SeanceController extends Controller
 {
@@ -78,12 +79,19 @@ class SeanceController extends Controller
     // форма редактирования
     public function edit(string $id)
     {
+        $seance = Seance::findOrFail($id);
+
+        if (!Gate::allows('edit-seance', $seance)) {
+            return redirect('/error')->with('message', 'Редактирование возможно только для будущих сеансов (или для администратора).');
+        }
+
         return view('seance_edit', [
-            'seance' => Seance::findOrFail($id),
+            'seance' => $seance,
             'halls' => Hall::all(),
             'movies' => Movie::all()
         ]);
     }
+
 
     // обновление сеанса
     public function update(Request $request, string $id)
@@ -119,7 +127,13 @@ class SeanceController extends Controller
     // удаление
     public function destroy(string $id)
     {
+        if (!Gate::allows('delete-seance')) {
+            return redirect('/error')->with('message', 'У вас нет прав на удаление сеансов.');
+        }
+
         Seance::destroy($id);
         return redirect('/seances');
     }
+
+
 }
