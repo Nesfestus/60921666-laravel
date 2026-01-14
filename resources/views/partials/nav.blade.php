@@ -21,7 +21,7 @@
                 @endauth
             </ul>
 
-            {{-- Правая часть: вход/выход --}}
+            {{-- правая часть: вход/выход --}}
             @guest
                 <form class="d-flex" method="post" action="{{ url('/auth') }}">
                     @csrf
