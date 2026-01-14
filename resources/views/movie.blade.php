@@ -1,25 +1,37 @@
-<!doctype html>
-<html lang="ru">
-<head><meta charset="utf-8"><title>Фильм</title></head>
-<body>
-<h2>
-    {{ $movie ? "Фильм: ".$movie->name : "Неверный ID фильма" }}
-</h2>
+@extends('layout')
+@section('title','Фильм')
 
-@if($movie)
-    <p>Длительность: {{ $movie->duration }} мин.</p>
+@section('content')
+    <h2 class="mb-3">
+        {{ $movie ? "Фильм: ".$movie->name : "Неверный ID фильма" }}
+    </h2>
 
-    <h3>Сеансы фильма</h3>
-    <table border="1">
-        <tr><td>ID</td><td>Зал</td><td>Начало</td></tr>
-        @foreach($movie->seances as $seance)
-            <tr>
-                <td>{{ $seance->id }}</td>
-                <td>{{ $seance->hall_id }}</td>
-                <td>{{ $seance->start_at }}</td>
-            </tr>
-        @endforeach
-    </table>
-@endif
-</body>
-</html>
+    @if($movie)
+        <p class="text-muted">Длительность: {{ $movie->duration }} мин.</p>
+
+        <h4 class="mb-3">Сеансы фильма</h4>
+
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered align-middle">
+                <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Зал</th>
+                    <th>Начало</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach($movie->seances as $seance)
+                    <tr>
+                        <td>{{ $seance->id }}</td>
+                        <td>{{ $seance->hall_id }}</td>
+                        <td>{{ $seance->start_at }}</td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+        </div>
+
+        <a class="btn btn-secondary" href="{{ url('/movies') }}">Назад</a>
+    @endif
+@endsection

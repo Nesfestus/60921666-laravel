@@ -132,7 +132,8 @@ class SeanceController extends Controller
         }
 
         Seance::destroy($id);
-        return redirect('/seances');
+        return redirect('/seances')->with('message', 'Сеанс успешно удалён.');
+
     }
 
 

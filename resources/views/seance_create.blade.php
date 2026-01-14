@@ -1,69 +1,53 @@
-<!doctype html>
-<html lang="ru">
-<head>
-    <meta charset="utf-8">
-    <title>Создать сеанс</title>
-    <style>.is-invalid{color:red;}</style>
-</head>
-<body>
+@extends('layout')
 
-<h2>Добавление сеанса</h2>
+@section('title', 'Добавить сеанс')
 
-<form method="post" action="{{ url('/seances') }}">
-    @csrf
+@section('content')
+    <h2 class="mb-3">Добавление сеанса</h2>
 
-    <label>Зал:</label><br>
-    <select name="hall_id">
-        <option style="display:none"></option>
-        @foreach($halls as $hall)
-            <option value="{{ $hall->id }}"
-                    @if(old('hall_id') == $hall->id) selected @endif>
-                {{ $hall->name }}
-            </option>
-        @endforeach
-    </select>
-    @error('hall_id')
-    <div class="is-invalid">{{ $message }}</div>
-    @enderror
+    <form class="card card-body" method="post" action="{{ url('/seances') }}">
+        @csrf
 
-    <br><br>
+        <div class="mb-3">
+            <label class="form-label">Зал</label>
+            <select class="form-select @error('hall_id') is-invalid @enderror" name="hall_id">
+                <option style="display:none"></option>
+                @foreach($halls as $hall)
+                    <option value="{{ $hall->id }}" @if(old('hall_id') == $hall->id) selected @endif>
+                        {{ $hall->name }}
+                    </option>
+                @endforeach
+            </select>
+            @error('hall_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
+        </div>
 
-    <label>Фильм:</label><br>
-    <select name="movie_id">
-        <option style="display:none"></option>
-        @foreach($movies as $movie)
-            <option value="{{ $movie->id }}"
-                    @if(old('movie_id') == $movie->id) selected @endif>
-                {{ $movie->name }}
-            </option>
-        @endforeach
-    </select>
-    @error('movie_id')
-    <div class="is-invalid">{{ $message }}</div>
-    @enderror
+        <div class="mb-3">
+            <label class="form-label">Фильм</label>
+            <select class="form-select @error('movie_id') is-invalid @enderror" name="movie_id">
+                <option style="display:none"></option>
+                @foreach($movies as $movie)
+                    <option value="{{ $movie->id }}" @if(old('movie_id') == $movie->id) selected @endif>
+                        {{ $movie->name }}
+                    </option>
+                @endforeach
+            </select>
+            @error('movie_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
+        </div>
 
-    <br><br>
+        <div class="mb-3">
+            <label class="form-label">Дата и время начала</label>
+            <input class="form-control @error('start_at') is-invalid @enderror"
+                   type="datetime-local" name="start_at" value="{{ old('start_at') }}">
+            @error('start_at')<div class="invalid-feedback">{{ $message }}</div>@enderror
+        </div>
 
-    <label>Дата и время начала:</label><br>
-    <input type="datetime-local" name="start_at" value="{{ old('start_at') }}">
-    @error('start_at')
-    <div class="is-invalid">{{ $message }}</div>
-    @enderror
+        <div class="form-check mb-3">
+            <input class="form-check-input @error('confirm') is-invalid @enderror"
+                   type="checkbox" name="confirm" value="1" id="confirm" {{ old('confirm') ? 'checked' : '' }}>
+            <label class="form-check-label" for="confirm">Подтверждаю создание сеанса</label>
+            @error('confirm')<div class="invalid-feedback">{{ $message }}</div>@enderror
+        </div>
 
-    <br><br>
-
-    <label>
-        <input type="checkbox" name="confirm" value="1" {{ old('confirm') ? 'checked' : '' }}>
-        Подтверждаю создание сеанса
-    </label>
-    @error('confirm')
-    <div class="is-invalid">{{ $message }}</div>
-    @enderror
-
-    <br><br>
-
-    <input type="submit" value="Сохранить">
-</form>
-
-</body>
-</html>
+        <button class="btn btn-primary" type="submit">Сохранить</button>
+    </form>
+@endsection

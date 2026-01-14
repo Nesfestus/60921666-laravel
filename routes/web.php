@@ -52,4 +52,9 @@ Route::middleware('auth')->group(function () {
 
     // seat show (тоже защита)
     Route::get('/seats/{id}', [SeatController::class, 'show']);
+
+    //error защита
+    Route::get('/error', function () {
+        return view('error', ['message' => session('message')]);
+    })->middleware('auth');
 });

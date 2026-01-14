@@ -1,19 +1,29 @@
-<!doctype html>
-<html lang="ru">
-<head><meta charset="utf-8"><title>Фильмы</title></head>
-<body>
-<h2>Список фильмов</h2>
+@extends('layout')
+@section('title','Фильмы')
 
-<table border="1">
-    <tr><td>ID</td><td>Название</td><td>Длительность</td><td>Ссылка</td></tr>
-    @foreach($movies as $movie)
-        <tr>
-            <td>{{ $movie->id }}</td>
-            <td>{{ $movie->name }}</td>
-            <td>{{ $movie->duration }}</td>
-            <td><a href="/movies/{{ $movie->id }}">Открыть</a></td>
-        </tr>
-    @endforeach
-</table>
-</body>
-</html>
+@section('content')
+    <h2 class="mb-3">Список фильмов</h2>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Название</th>
+                <th>Длительность</th>
+                <th>Ссылка</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach($movies as $movie)
+                <tr>
+                    <td>{{ $movie->id }}</td>
+                    <td>{{ $movie->name }}</td>
+                    <td>{{ $movie->duration }} мин.</td>
+                    <td><a class="btn btn-sm btn-outline-primary" href="{{ url('/movies/'.$movie->id) }}">Открыть</a></td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+    </div>
+@endsection

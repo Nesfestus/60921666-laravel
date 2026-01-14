@@ -1,47 +1,48 @@
-<!doctype html>
-<html lang="ru">
-<head>
-    <meta charset="utf-8">
-    <title>Вход</title>
-    <style>.is-invalid{color:red;}</style>
-</head>
-<body>
+@extends('layout')
 
-@if($user)
-    <h2>Здравствуйте, {{ $user->name }}</h2>
-    <form method="post" action="{{ url('/logout') }}">
-        @csrf
-        <button type="submit">Выйти из системы</button>
-    </form>
-@else
-    <h2>Вход в систему</h2>
+@section('title', 'Вход')
 
-    <form method="post" action="{{ url('/auth') }}">
-        @csrf
+@section('content')
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card card-body">
 
-        <label>E-mail</label><br>
-        <input type="email" name="email" value="{{ old('email') }}"><br>
-        @error('email')
-        <div class="is-invalid">{{ $message }}</div>
-        @enderror
+                @if($user)
+                    <h2 class="h4 mb-3">Здравствуйте, {{ $user->name }}</h2>
 
-        <br>
+                    <form method="post" action="{{ url('/logout') }}">
+                        @csrf
+                        <button class="btn btn-warning" type="submit">Выйти из системы</button>
+                    </form>
+                @else
+                    <h2 class="h4 mb-3">Вход в систему</h2>
 
-        <label>Пароль</label><br>
-        <input type="password" name="password"><br>
-        @error('password')
-        <div class="is-invalid">{{ $message }}</div>
-        @enderror
+                    <form method="post" action="{{ url('/auth') }}">
+                        @csrf
 
-        <br>
+                        <div class="mb-3">
+                            <label class="form-label">E-mail</label>
+                            <input class="form-control @error('email') is-invalid @enderror"
+                                   type="email" name="email" value="{{ old('email') }}">
+                            @error('email')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
 
-        <input type="submit" value="Отправить">
-    </form>
+                        <div class="mb-3">
+                            <label class="form-label">Пароль</label>
+                            <input class="form-control @error('password') is-invalid @enderror"
+                                   type="password" name="password">
+                            @error('password')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
 
-    @error('error')
-    <div class="is-invalid">{{ $message }}</div>
-    @enderror
-@endif
+                        <button class="btn btn-success" type="submit">Войти</button>
+                    </form>
 
-</body>
-</html>
+                    @error('error')
+                    <div class="alert alert-danger mt-3">{{ $message }}</div>
+                    @enderror
+                @endif
+
+            </div>
+        </div>
+    </div>
+@endsection
