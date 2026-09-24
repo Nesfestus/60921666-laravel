@@ -44,14 +44,23 @@
                     <td>{{ $seance->movie->name ?? $seance->movie_id }}</td>
                     <td>{{ $seance->start_at }}</td>
                     <td>
-                        <a class="btn btn-sm btn-outline-primary" href="{{ url('/seances/'.$seance->id) }}">Открыть</a>
-                        <a class="btn btn-sm btn-outline-warning" href="{{ url('/seances/edit/'.$seance->id) }}">Редактировать</a>
+                        <div class="d-flex gap-2 flex-wrap">
+                            <a class="btn btn-sm btn-outline-primary"
+                               href="{{ url('/seances/'.$seance->id) }}">
+                                Открыть
+                            </a>
 
-                        <a class="btn btn-sm btn-outline-danger"
-                           href="{{ url('/seances/destroy/'.$seance->id) }}"
-                           onclick="return confirm('Удалить сеанс №{{ $seance->id }}?');">
-                            Удалить
-                        </a>
+                            <a class="btn btn-sm btn-outline-warning"
+                               href="{{ url('/seances/edit/'.$seance->id) }}">
+                                Редактировать
+                            </a>
+
+                            <a class="btn btn-sm btn-outline-danger"
+                               href="{{ url('/seances/destroy/'.$seance->id) }}"
+                               onclick="return confirm('Удалить сеанс №{{ $seance->id }}?');">
+                                Удалить
+                            </a>
+                        </div>
                     </td>
                 </tr>
             @endforeach
