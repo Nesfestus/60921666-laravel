@@ -1,11 +1,15 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HallControllerApi;
 use App\Http\Controllers\MovieControllerApi;
 use App\Http\Controllers\SeanceControllerApi;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/movie', [MovieControllerApi::class, 'index']);
+// Открытые маршруты
+Route::post('/login', [AuthController::class, 'login']);
+
 Route::get('/movie/{id}', [MovieControllerApi::class, 'show']);
 
 Route::get('/hall', [HallControllerApi::class, 'index']);
@@ -13,3 +17,16 @@ Route::get('/hall/{id}', [HallControllerApi::class, 'show']);
 
 Route::get('/seance', [SeanceControllerApi::class, 'index']);
 Route::get('/seance/{id}', [SeanceControllerApi::class, 'show']);
+
+// Защищённые маршруты
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::get('/movie', [MovieControllerApi::class, 'index']);
+
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+
+    Route::post('/logout', [AuthController::class, 'logout']);
+
+});
