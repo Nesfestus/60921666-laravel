@@ -13,6 +13,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/movie/{id}', [MovieControllerApi::class, 'show']);
 
 Route::get('/hall', [HallControllerApi::class, 'index']);
+Route::get('/halls_total', [HallControllerApi::class, 'total']);
 Route::get('/hall/{id}', [HallControllerApi::class, 'show']);
 
 Route::get('/seance', [SeanceControllerApi::class, 'index']);
@@ -22,6 +23,7 @@ Route::get('/seance/{id}', [SeanceControllerApi::class, 'show']);
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/movie', [MovieControllerApi::class, 'index']);
+    Route::get('/movies_total', [MovieControllerApi::class, 'total']);
 
     Route::get('/user', function (Request $request) {
         return $request->user();
