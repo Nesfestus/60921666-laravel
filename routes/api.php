@@ -23,6 +23,7 @@ Route::get('/seance/{id}', [SeanceControllerApi::class, 'show']);
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/movie', [MovieControllerApi::class, 'index']);
+    Route::post('/movie', [MovieControllerApi::class, 'store']);
     Route::get('/movies_total', [MovieControllerApi::class, 'total']);
 
     Route::get('/user', function (Request $request) {

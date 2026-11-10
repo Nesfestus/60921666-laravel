@@ -35,5 +35,10 @@ class AppServiceProvider extends ServiceProvider
             if ((int)$user->is_admin === 1) return true;
             return $seance->start_at > now();
         });
+
+        // Добавлять фильмы может только администратор
+        Gate::define('create-movie', function (User $user) {
+            return (int) $user->is_admin === 1;
+        });
     }
 }
