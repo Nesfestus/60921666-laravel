@@ -40,5 +40,15 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('create-movie', function (User $user) {
             return (int) $user->is_admin === 1;
         });
+
+        // Удалять фильмы может только администратор
+        Gate::define('delete-movie', function (User $user) {
+            return (int) $user->is_admin === 1;
+        });
+
+        // Редактировать фильмы может только администратор
+        Gate::define('update-movie', function (User $user) {
+            return (int) $user->is_admin === 1;
+        });
     }
 }

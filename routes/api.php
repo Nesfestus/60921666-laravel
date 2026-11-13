@@ -24,6 +24,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/movie', [MovieControllerApi::class, 'index']);
     Route::post('/movie', [MovieControllerApi::class, 'store']);
+    Route::delete('/movie/{id}', [MovieControllerApi::class, 'destroy']);
+    Route::post('/movie/{id}', [MovieControllerApi::class, 'update']);
     Route::get('/movies_total', [MovieControllerApi::class, 'total']);
 
     Route::get('/user', function (Request $request) {
