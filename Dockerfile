@@ -1,15 +1,19 @@
-FROM php:8.4-cli
+FROM php:8.4-fpm
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends git unzip \
-    && docker-php-ext-install pdo_mysql \
+    && apt-get install -y --no-install-recommends git unzip libpng-dev \
+    && docker-php-ext-install pdo_mysql gd \
     && cp "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 
 WORKDIR /var/www/html
+COPY . .
 
-EXPOSE 8000
+RUN COMPOSER_ALLOW_SUPERUSER=1 composer install \
+        --no-dev --no-interaction --prefer-dist --optimize-autoloader \
+    && chown -R www-data:www-data storage bootstrap/cache
 
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+EXPOSE 9000
+CMD ["php-fpm"]
