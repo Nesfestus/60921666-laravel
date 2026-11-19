@@ -39,12 +39,12 @@ jobs:
           git -C backend pull --ff-only origin master
           docker compose build cinema-backend-fpm
           docker compose up -d --no-deps cinema-backend-fpm
-          docker compose exec -T cinema-nginx nginx -t
-          docker compose exec -T cinema-nginx nginx -s reload
+          docker compose exec -T --interactive=false cinema-nginx nginx -t
+          docker compose exec -T --interactive=false cinema-nginx nginx -s reload
 
-          docker compose exec -T cinema-backend-fpm php artisan migrate --force
-          docker compose exec -T cinema-backend-fpm php artisan config:cache
-          docker compose exec -T cinema-backend-fpm php artisan route:cache
+          docker compose exec -T --interactive=false cinema-backend-fpm php artisan migrate --force
+          docker compose exec -T --interactive=false cinema-backend-fpm php artisan config:cache
+          docker compose exec -T --interactive=false cinema-backend-fpm php artisan route:cache
 
           curl -fsS --retry 4 --retry-all-errors --retry-delay 2 --max-time 10 \
             --resolve cinemavoid.space:443:127.0.0.1 \
