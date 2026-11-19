@@ -1,0 +1,53 @@
+name: Deploy Laravel
+
+on:
+  push:
+    branches: [master]
+
+permissions: {}
+
+concurrency:
+  group: deploy-backend
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prepare SSH
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_HOST_PUBLIC_KEY: 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOKvYihzdwhAyuiy6cizDEP99C2QbCZSqsATdEZVRew/'
+        run: |
+          install -d -m 700 "$HOME/.ssh"
+          printf '%s\n' "$SSH_PRIVATE_KEY" | tr -d '\r' > "$HOME/.ssh/id_ed25519"
+          chmod 600 "$HOME/.ssh/id_ed25519"
+          printf '%s %s\n' "$SSH_HOST" "$SSH_HOST_PUBLIC_KEY" > "$HOME/.ssh/known_hosts"
+
+      - name: Deploy Laravel and check API
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+        run: |
+          ssh -T -o BatchMode=yes -o StrictHostKeyChecking=yes \
+            -o IdentitiesOnly=yes -i "$HOME/.ssh/id_ed25519" \
+            "$SSH_USER@$SSH_HOST" 'bash -s' <<'DEPLOY'
+          set -euo pipefail
+          cd /var/www/cinema-docker/lb12
+
+          git -C backend pull --ff-only origin master
+          docker compose build cinema-backend-fpm
+          docker compose up -d --no-deps cinema-backend-fpm
+          docker compose exec -T cinema-nginx nginx -t
+          docker compose exec -T cinema-nginx nginx -s reload
+
+          docker compose exec -T cinema-backend-fpm php artisan migrate --force
+          docker compose exec -T cinema-backend-fpm php artisan config:cache
+          docker compose exec -T cinema-backend-fpm php artisan route:cache
+
+          curl -fsS --retry 4 --retry-all-errors --retry-delay 2 --max-time 10 \
+            --resolve cinemavoid.space:443:127.0.0.1 \
+            -o /dev/null -w 'API HTTP %{http_code}\n' \
+            https://cinemavoid.space/api/movies_total
+          DEPLOY
